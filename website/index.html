@@ -5,40 +5,147 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Perccent PERC pool · BeamHash III</title>
   <style>
-    :root { --bg:#0b0d14; --panel:#141824; --line:#252b3d; --text:#e8ecf4; --muted:#9aa3b8; --neon:#f8ff14; --cyan:#00e5ff; }
+    :root { --bg:#0b0d14; --panel:#141824; --line:#252b3d; --text:#e8ecf4; --muted:#9aa3b8; --neon:#f8ff14; --cyan:#00e5ff; --mineperc-longest-ch: 88; }
     * { box-sizing:border-box; }
     body { margin:0; font-family:Segoe UI,system-ui,sans-serif; background:var(--bg); color:var(--text); }
-    .wrap { max-width:1080px; margin:0 auto; padding:28px 18px 64px; }
+    .wrap { max-width:none; margin:0 auto; padding:28px 18px 64px; }
     h1 { font-size:1.7rem; margin:0 0 6px; }
     .sub { color:var(--muted); margin:0 0 22px; }
-    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-bottom:22px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,max-content)); gap:12px; margin-bottom:22px; }
     .card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:14px 16px; }
     .label { color:var(--muted); font-size:.75rem; letter-spacing:.06em; text-transform:uppercase; }
     .value { font-size:1.2rem; font-weight:700; margin-top:4px; color:var(--neon); text-shadow:0 0 8px rgba(248,255,20,.45); }
     a { color:var(--cyan); }
     code, pre { background:#0b1a2c; padding:.15em .4em; border-radius:6px; color:var(--neon); }
-    pre { padding:12px; overflow:auto; white-space:pre-wrap; }
     .hint { color:var(--muted); font-size:.88rem; }
+    .info-box {
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin-top:6px;
+      min-width: calc(var(--mineperc-longest-ch) * 1ch);
+      width: max-content;
+      max-width: none;
+      overflow: visible;
+    }
+    .info-value {
+      display:block;
+      font-family: ui-monospace, Consolas, monospace;
+      font-size:.92rem;
+      font-weight:700;
+      color:var(--neon);
+      background:#0b1a2c;
+      padding:.35em .55em;
+      border-radius:6px;
+      white-space: pre;
+      overflow: visible;
+      text-overflow: clip;
+      min-width: calc(var(--mineperc-longest-ch) * 1ch);
+      width: max-content;
+    }
+    .copy-icon {
+      flex:0 0 auto;
+      width:2rem; height:2rem;
+      padding:0;
+      border:1px solid var(--line);
+      border-radius:8px;
+      background:#0b1a2c;
+      color:var(--cyan);
+      cursor:pointer;
+    }
+    .copy-icon:hover { border-color:var(--cyan); }
+    .copy-icon svg { display:block; width:1.05rem; height:1.05rem; margin:0 auto; fill:currentColor; }
+    .cmd-list { display:flex; flex-direction:column; gap:10px; }
   </style>
 </head>
 <body>
   <div class="wrap">
     <h1>Perccent PERC pool</h1>
-    <p class="sub">mineperc.restoreprivacy.online · BeamHash III · perc-mine + perc-stratum-pool + BASiC</p>
-    <div class="grid">
+    <p class="sub">mineperc.restoreprivacy.online · BeamHash III · perc-mine + perc-stratum-pool + BASiC · not a Beam coin pool</p>
+    <div class="grid" id="mineperc-fact-grid">
       <div class="card"><div class="label">Coin</div><div class="value">PERC</div></div>
       <div class="card"><div class="label">Algorithm</div><div class="value">BeamHash III</div></div>
-      <div class="card"><div class="label">Normal</div><div class="value" style="font-size:.95rem">mineperc.restoreprivacy.online:1466</div></div>
-      <div class="card"><div class="label">High-diff</div><div class="value" style="font-size:.95rem">mineperc.restoreprivacy.online:3334</div></div>
-      <div class="card"><div class="label">Worker</div><div class="value" style="font-size:.95rem">PERC_USERNAME.WORKER</div></div>
+      <div class="card">
+        <div class="label">Normal</div>
+        <div class="info-box" data-info-box="1">
+          <code class="info-value" id="part-stratum" data-copy-part="stratum">mineperc.restoreprivacy.online:1466</code>
+          <button type="button" class="copy-icon" data-copy-target="stratum" aria-label="Copy normal stratum" title="Copy normal stratum">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="label">High-diff</div>
+        <div class="info-box" data-info-box="1">
+          <code class="info-value" id="part-high" data-copy-part="high">mineperc.restoreprivacy.online:3334</code>
+          <button type="button" class="copy-icon" data-copy-target="high" aria-label="Copy high-diff stratum" title="Copy high-diff stratum">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="label">Worker</div>
+        <div class="info-box" data-info-box="1">
+          <code class="info-value" id="part-worker" data-copy-part="worker">PERC_USERNAME.WORKER</code>
+          <button type="button" class="copy-icon" data-copy-target="worker" aria-label="Copy worker" title="Copy worker">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+          </button>
+        </div>
+      </div>
     </div>
-    <h2>Connect</h2>
-    <p class="hint">Normal: <code>1466</code>. High-diff: <code>3334</code>. Beam keeps <code>1690</code>/<code>1974</code>. Payouts are PERC.</p>
-    <pre>perc-mine --pool mineperc.restoreprivacy.online:1466 --user PERC_USERNAME.WORKER
-lolMiner --algo BEAM-III --pool mineperc.restoreprivacy.online:1466 --user PERC_USERNAME.WORKER
-miniZ --url mineperc.restoreprivacy.online:1466 --user PERC_USERNAME.WORKER --algo beamhashiii
-gminer --algo beamhashIII --server mineperc.restoreprivacy.online:1466 --user PERC_USERNAME.WORKER</pre>
-    <p class="hint">Repos: <a href="https://github.com/rgsneddon/perc-mine">perc-mine</a> · <a href="https://github.com/rgsneddon/perc-stratum-pool">perc-stratum-pool</a> · <a href="https://github.com/rgsneddon/basic">basic</a> · explorer <a href="https://evolve.restoreprivacy.online/">evolve</a></p>
+    <h2>Connect a miner</h2>
+    <p class="hint">Normal difficulty: port <code>1466</code>. High difficulty: port <code>3334</code>. Ports <code>1690</code> and <code>1974</code> stay on Beam. Username is your Perccent identity. Payouts are PERC. Do not pass <code>--coin BEAM</code>. CPU miner: <a href="https://github.com/rgsneddon/perc-mine/releases">perc-mine v1.0.0</a>.</p>
+    <div class="cmd-list" id="mineperc-commands">
+      <div class="info-box" data-info-box="1">
+        <code class="info-value" id="part-perc-mine" data-copy-part="perc-mine">perc-mine --pool mineperc.restoreprivacy.online:1466 --user PERC_USERNAME.WORKER</code>
+        <button type="button" class="copy-icon" data-copy-target="perc-mine" aria-label="Copy perc-mine command" title="Copy perc-mine command">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        </button>
+      </div>
+      <div class="info-box" data-info-box="1">
+        <code class="info-value" id="part-lolminer" data-copy-part="lolminer">lolMiner --algo BEAM-III --pool mineperc.restoreprivacy.online:1466 --user PERC_USERNAME.WORKER</code>
+        <button type="button" class="copy-icon" data-copy-target="lolminer" aria-label="Copy lolMiner command" title="Copy lolMiner command">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        </button>
+      </div>
+      <div class="info-box" data-info-box="1">
+        <code class="info-value" id="part-miniz" data-copy-part="miniz">miniZ --url mineperc.restoreprivacy.online:1466 --user PERC_USERNAME.WORKER --algo beamhashiii</code>
+        <button type="button" class="copy-icon" data-copy-target="miniz" aria-label="Copy miniZ command" title="Copy miniZ command">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        </button>
+      </div>
+      <div class="info-box" data-info-box="1">
+        <code class="info-value" id="part-gminer" data-copy-part="gminer">gminer --algo beamhashIII --server mineperc.restoreprivacy.online:1466 --user PERC_USERNAME.WORKER</code>
+        <button type="button" class="copy-icon" data-copy-target="gminer" aria-label="Copy gminer command" title="Copy gminer command">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        </button>
+      </div>
+    </div>
+    <p class="hint">Repos: <a href="https://github.com/rgsneddon/perc-mine">perc-mine</a> · <a href="https://github.com/rgsneddon/perc-stratum-pool">perc-stratum-pool</a> · <a href="https://github.com/rgsneddon/basic">basic</a> · JSON <a href="/api/connect">/api/connect</a> · health <a href="/health">/health</a> · explorer <a href="https://evolve.restoreprivacy.online/">evolve.restoreprivacy.online</a></p>
   </div>
+  <script type="module">
+    import {
+      collectPartTexts,
+      copyPayloadForPart,
+      minWidthChFromParts,
+    } from './mineperc_parts.js';
+
+    const parts = document.querySelectorAll('[data-copy-part]');
+    const ch = minWidthChFromParts(collectPartTexts(parts), 1);
+    document.documentElement.style.setProperty('--mineperc-longest-ch', String(ch));
+
+    document.querySelectorAll('[data-copy-target]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const key = btn.getAttribute('data-copy-target');
+        const el = document.querySelector(`[data-copy-part="${key}"]`);
+        const text = copyPayloadForPart(el ? el.textContent : '');
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+          }
+        } catch (_) { /* ignore */ }
+      });
+    });
+  </script>
 </body>
 </html>
