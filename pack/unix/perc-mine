@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+HERE="$(cd "$(dirname "$0")" && pwd)"
+if [[ -f "$HERE/../../src/miner.js" ]]; then
+  exec node "$HERE/../../src/miner.js" "$@"
+fi
+if [[ -f "$HERE/src/miner.js" ]]; then
+  exec node "$HERE/src/miner.js" "$@"
+fi
+echo "perc-mine: could not find src/miner.js" >&2
+exit 1

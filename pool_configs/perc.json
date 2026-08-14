@@ -1,0 +1,18 @@
+{
+  "enabled": true,
+  "coin": "PERC",
+  "algorithm": "beamhashIII",
+  "host": "mineperc.restoreprivacy.online",
+  "httpPort": 8011,
+  "ports": [1466, 3334],
+  "portRoles": {
+    "1466": "normal",
+    "3334": "high"
+  },
+  "reservedBeamPorts": [1690, 1974],
+  "username": "PERC_USERNAME.WORKER",
+  "linked": {
+    "stratum": "https://github.com/rgsneddon/perc-stratum-pool",
+    "basic": "https://github.com/rgsneddon/basic"
+  }
+}

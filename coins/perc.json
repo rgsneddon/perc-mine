@@ -1,0 +1,9 @@
+{
+  "name": "Perccent",
+  "symbol": "PERC",
+  "algorithm": "beamhashIII",
+  "algorithmName": "BeamHash III",
+  "note": "Algorithm reuse only. Payouts are PERC, not BEAM.",
+  "explorer": "https://evolve.restoreprivacy.online/",
+  "pool": "https://mineperc.restoreprivacy.online/"
+}

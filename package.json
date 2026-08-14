@@ -1,0 +1,28 @@
+{
+  "name": "perc-mine",
+  "version": "1.0.0",
+  "description": "Perccent (PERC) open-source pool + CPU miner. BeamHash III. Linked to perc-stratum-pool and BASiC, same split as beam-mine.",
+  "type": "module",
+  "bin": {
+    "perc-mine": "src/miner.js"
+  },
+  "main": "init.js",
+  "scripts": {
+    "start": "node src/miner.js",
+    "mine": "node src/miner.js --pool mineperc.restoreprivacy.online:1466 --user PERC_USERNAME.WORKER",
+    "pool": "node init.js",
+    "test": "node --test tests/*.js"
+  },
+  "dependencies": {
+    "perc-stratum-pool": "git+https://github.com/rgsneddon/perc-stratum-pool.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rgsneddon/perc-mine.git"
+  },
+  "homepage": "https://mineperc.restoreprivacy.online/"
+}
