@@ -16,6 +16,41 @@ const PORT = Number(process.env.PERC_MINE_GUI_PORT || 18765);
 
 let child = null;
 const lines = ['Ready.'];
+let lastConnect = null;
+const STATS_URL =
+  process.env.PERC_MINE_STATS_URL || 'https://mineperc.restoreprivacy.online/api/miner-stats';
+
+function hashesFromLines() {
+  let hashes = 0;
+  for (const line of lines) {
+    const m = /hashes~\s*(\d+)/.exec(line);
+    if (m) hashes = Math.max(hashes, Number(m[1]));
+  }
+  return hashes;
+}
+
+async function publishGuiStats() {
+  if (!child || !lastConnect) return;
+  const hashes = hashesFromLines();
+  const elapsed = Math.max(0.001, (Date.now() - (lastConnect.at || Date.now())) / 1000);
+  try {
+    await fetch(STATS_URL, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        username: lastConnect.user,
+        login: lastConnect.user,
+        threads: lastConnect.threads,
+        hashes,
+        hashrate: hashes / elapsed,
+        version: '1.0.1',
+      }),
+      signal: AbortSignal.timeout(6000),
+    });
+  } catch {
+    /* pool optional */
+  }
+}
 
 function pushLine(s) {
   const text = String(s || '').replace(/\n+$/, '');
@@ -34,6 +69,7 @@ function stopMiner() {
 }
 
 export function createGuiServer({ port = PORT } = {}) {
+  const timer = setInterval(publishGuiStats, 4000);
   const server = http.createServer((req, res) => {
     const url = new URL(req.url || '/', `http://127.0.0.1:${port}`);
     if (url.pathname === '/' || url.pathname === '/index.html') {
@@ -75,6 +111,11 @@ export function createGuiServer({ port = PORT } = {}) {
           body = {};
         }
         stopMiner();
+        lastConnect = {
+          user: body.user,
+          threads: Number(body.threads) || 1,
+          at: Date.now(),
+        };
         const started = startMinerFromGui({
           pool: body.pool,
           user: body.user,
@@ -101,6 +142,7 @@ export function createGuiServer({ port = PORT } = {}) {
     listen: (cb) => server.listen(port, '127.0.0.1', cb),
     close: () =>
       new Promise((resolve) => {
+        clearInterval(timer);
         stopMiner();
         server.close(resolve);
       }),

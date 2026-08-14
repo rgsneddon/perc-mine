@@ -102,6 +102,22 @@ export function main(argv = process.argv) {
   let job = null;
   let hashes = 0;
   let running = false;
+  const started = Date.now();
+
+  function reportStats() {
+    const elapsed = Math.max(0.001, (Date.now() - started) / 1000);
+    send(sock, {
+      method: 'stats',
+      login: user,
+      threads,
+      hashes,
+      hashrate: hashes / elapsed,
+      version: VERSION,
+      jobId: job?.jobId || job?.id,
+      height: job?.height,
+      jsonrpc: '2.0',
+    });
+  }
 
   sock.setEncoding('utf8');
   const hello = () => {
@@ -137,6 +153,7 @@ export function main(argv = process.argv) {
         console.log(
           `job ${job.jobId || job.id} height=${job.height} algo=${job.algorithm || 'beamhashIII'} threads=${threads}`,
         );
+        reportStats();
         if (!running) mine();
       } else if (msg.description) {
         console.log('pool:', msg.description, msg.nonceprefix || msg.code || '', msg.asset || '');
@@ -162,6 +179,10 @@ export function main(argv = process.argv) {
           });
           console.log('submitted solution hashes~', hashes, 'thread-start', startNonce);
         }
+        if (extra % 4 === 0) {
+          reportStats();
+          await new Promise((r) => setImmediate(r));
+        }
       }
       if (nonce % (8 * nonceStride) === startNonce % (8 * nonceStride)) {
         console.log('searching… hashes~', hashes, 'nonce', nonce, 'threads', threads);
@@ -173,7 +194,10 @@ export function main(argv = process.argv) {
 
   async function mine() {
     running = true;
+    const tick = setInterval(reportStats, 5000);
+    sock.on('close', () => clearInterval(tick));
     await Promise.all(starts.map((start) => mineSlot(start)));
+    clearInterval(tick);
   }
 
   return { sock, cfg };
