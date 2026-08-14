@@ -15,7 +15,7 @@ if ($userPath -notlike "*$Bin*") {
   [Environment]::SetEnvironmentVariable('Path', "$userPath;$Bin", 'User')
   $env:Path = "$env:Path;$Bin"
 }
-Write-Host "Installed perc-mine 1.0.1 to $Bin"
+Write-Host "Installed perc-mine 1.0.2 to $Bin"
 Write-Host "Open a new terminal, then:"
 Write-Host "  perc-mine-gui"
 Write-Host "  perc-mine --pool mineperc.restoreprivacy.online:1466 --user YOUR_PERC_NAME.worker1 --threads 4"

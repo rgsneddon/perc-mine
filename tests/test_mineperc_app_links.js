@@ -12,9 +12,9 @@ const REQUIRED = [
   ['perccent-wallet Android', 'https://github.com/rgsneddon/perccent-wallet/releases/download/v1.1.6/perccent-wallet-v1.1.6-android-setup.apk'],
   ['perccent-wallet macOS', 'https://github.com/rgsneddon/perccent-wallet/releases/download/v1.1.7/perccent-wallet-v1.1.7-macos-setup.zip'],
   ['perccent-wallet iOS', 'https://github.com/rgsneddon/perccent-wallet/releases/download/v1.1.7/perccent-wallet-v1.1.7-ios-setup.ipa'],
-  ['perc-mine Windows', 'https://github.com/rgsneddon/perc-mine/releases/download/v1.0.1/perc-mine-1.0.1-windows.zip'],
-  ['perc-mine Linux', 'https://github.com/rgsneddon/perc-mine/releases/download/v1.0.1/perc-mine-1.0.1-linux.tar.gz'],
-  ['perc-mine macOS', 'https://github.com/rgsneddon/perc-mine/releases/download/v1.0.1/perc-mine-1.0.1-macos.tar.gz'],
+  ['perc-mine Windows', 'https://github.com/rgsneddon/perc-mine/releases/download/v1.0.2/perc-mine-1.0.2-windows.zip'],
+  ['perc-mine Linux', 'https://github.com/rgsneddon/perc-mine/releases/download/v1.0.2/perc-mine-1.0.2-linux.tar.gz'],
+  ['perc-mine macOS', 'https://github.com/rgsneddon/perc-mine/releases/download/v1.0.2/perc-mine-1.0.2-macos.tar.gz'],
 ];
 
 function anchors(html) {

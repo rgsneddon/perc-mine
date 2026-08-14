@@ -9,7 +9,7 @@ import { solveOnce, hex8, extraFromInt } from './solve.js';
 import { defaultPreWork } from './beamhash_iii.js';
 import { isMainModule } from './is_main.js';
 
-export const VERSION = '1.0.1';
+export const VERSION = '1.0.2';
 
 export const HELP = `perc-mine ${VERSION} — Perccent CPU miner (BeamHash III)
 

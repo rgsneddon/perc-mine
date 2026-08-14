@@ -1,6 +1,6 @@
 {
   "name": "perc-mine",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Perccent (PERC) open-source pool + CPU miner. BeamHash III. Linked to perc-stratum-pool and BASiC, same split as beam-mine.",
   "type": "module",
   "bin": {

@@ -52,8 +52,12 @@ export function buildMinerCommand({
 
 export function startMinerFromGui(settings, spawnFn = spawn) {
   const cmd = buildMinerCommand(settings);
-  const child = spawnFn(cmd.exe, cmd.args, {
-    stdio: ['ignore', 'pipe', 'pipe'],
-  });
-  return { child, cmd };
+  try {
+    const child = spawnFn(cmd.exe, cmd.args, {
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    return { child, cmd, ok: true };
+  } catch (err) {
+    return { child: null, cmd, ok: false, error: err.message || String(err) };
+  }
 }

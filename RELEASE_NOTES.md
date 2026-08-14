@@ -1,6 +1,6 @@
-# perc-mine v1.0.1
+# perc-mine v1.0.2
 
-Installable GUI: choose **threads**, see/edit the **miner config command**, click **Connect** to start the shipped miner. `--threads N` is honored as N CPU workers (nonce stride). Packages: `perc-mine-1.0.1-windows.zip`, `perc-mine-1.0.1-linux.tar.gz`, `perc-mine-1.0.1-macos.tar.gz`.
+Standalone desktop app (tkinter, not a browser). Connect starts the shipped miner against `mineperc.restoreprivacy.online:1466`. Packages: `perc-mine-1.0.2-windows.zip` (includes `perc-mine-gui.exe`), `perc-mine-1.0.2-linux.tar.gz`, `perc-mine-1.0.2-macos.tar.gz`.
 
 # perc-mine v1.0.0
 

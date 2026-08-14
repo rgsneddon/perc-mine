@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>perc-mine 1.0.1</title>
+  <title>perc-mine 1.0.2</title>
   <style>
     :root { --bg:#0b0d14; --panel:#141824; --line:#252b3d; --text:#e8ecf4; --muted:#9aa3b8; --neon:#1affff; --ok:#00d4aa; }
     * { box-sizing:border-box; }
@@ -26,8 +26,8 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>perc-mine 1.0.1</h1>
-    <p class="sub">Perccent CPU miner · BeamHash III · Connect starts the miner with the command below</p>
+    <h1>perc-mine 1.0.2</h1>
+    <p class="sub">Perccent CPU miner · use the standalone perc-mine-gui app to Connect</p>
     <label for="pool">Pool</label>
     <input id="pool" value="mineperc.restoreprivacy.online:1466"/>
     <label for="user">Perc user</label>
@@ -52,15 +52,27 @@
     const log = document.getElementById('log');
     let connected = false;
 
+    if (location.protocol === 'file:') {
+      log.textContent =
+        'This file cannot reach the pool by itself. Run the standalone perc-mine-gui app (perc-mine-gui.exe or python src/desktop_gui.py).';
+      go.disabled = true;
+      go.textContent = 'Open perc-mine-gui';
+    }
+
     async function refreshCommand() {
-      const q = new URLSearchParams({
-        pool: pool.value,
-        user: user.value,
-        threads: threads.value,
-      });
-      const r = await fetch('/api/command?' + q.toString());
-      const j = await r.json();
-      command.value = j.argvText;
+      if (location.protocol === 'file:') return;
+      try {
+        const q = new URLSearchParams({
+          pool: pool.value,
+          user: user.value,
+          threads: threads.value,
+        });
+        const r = await fetch('/api/command?' + q.toString());
+        const j = await r.json();
+        command.value = j.argvText;
+      } catch (err) {
+        append('error ' + (err && err.message ? err.message : 'fetch failed'));
+      }
     }
     pool.addEventListener('input', refreshCommand);
     user.addEventListener('input', refreshCommand);
@@ -87,11 +99,21 @@
         threads: Number(threads.value),
         command: command.value,
       };
-      const r = await fetch('/api/connect', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(body),
-      });
+      if (location.protocol === 'file:') {
+        append('Run perc-mine-gui.exe — Connect does not work from a file:// page.');
+        return;
+      }
+      let r;
+      try {
+        r = await fetch('/api/connect', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+      } catch (err) {
+        append('error ' + (err && err.message ? err.message : 'fetch failed'));
+        return;
+      }
       const j = await r.json();
       append(j.started ? 'started ' + j.cmd.argvText : ('error ' + (j.error || 'failed')));
       if (j.started) {
@@ -102,11 +124,16 @@
     });
 
     setInterval(async () => {
-      const r = await fetch('/api/status');
-      const j = await r.json();
-      if (j.lines && j.lines.length) {
-        log.textContent = j.lines.join('\n');
-        log.scrollTop = log.scrollHeight;
+      if (location.protocol === 'file:') return;
+      try {
+        const r = await fetch('/api/status');
+        const j = await r.json();
+        if (j.lines && j.lines.length) {
+          log.textContent = j.lines.join('\n');
+          log.scrollTop = log.scrollHeight;
+        }
+      } catch {
+        /* server down */
       }
     }, 800);
   </script>

@@ -6,3 +6,8 @@ data/
 dist/
 *.zip
 *.tar.gz
+
+build/
+dist/
+*.spec
+__pycache__/

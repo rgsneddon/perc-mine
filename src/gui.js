@@ -43,7 +43,7 @@ async function publishGuiStats() {
         threads: lastConnect.threads,
         hashes,
         hashrate: hashes / elapsed,
-        version: '1.0.1',
+        version: '1.0.2',
       }),
       signal: AbortSignal.timeout(6000),
     });
@@ -122,10 +122,20 @@ export function createGuiServer({ port = PORT } = {}) {
           threads: body.threads,
           notls: Boolean(body.notls),
         });
+        if (!started.child) {
+          const err = started.error || 'failed to spawn miner';
+          pushLine(`spawn error: ${err}`);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ started: false, error: err, cmd: started.cmd }));
+          return;
+        }
         child = started.child;
         pushLine(`Connect → ${started.cmd.argvText}`);
         child.stdout?.on('data', (d) => pushLine(d.toString('utf8')));
         child.stderr?.on('data', (d) => pushLine(d.toString('utf8')));
+        child.on('error', (err) => {
+          pushLine(`spawn error: ${err.message || err}`);
+        });
         child.on('exit', (code) => {
           pushLine(`miner exit ${code}`);
           child = null;
@@ -151,18 +161,27 @@ export function createGuiServer({ port = PORT } = {}) {
   };
 }
 
-function openBrowser(url) {
-  const plat = process.platform;
-  if (plat === 'darwin') exec(`open "${url}"`);
-  else if (plat === 'win32') exec(`start "" "${url}"`);
-  else exec(`xdg-open "${url}"`);
+function launchStandalone() {
+  const py = process.platform === 'win32' ? 'python' : 'python3';
+  const app = path.join(here, 'desktop_gui.py');
+  exec(`${JSON.stringify(py)} ${JSON.stringify(app)}`, (err) => {
+    if (err) {
+      console.error(
+        'perc-mine 1.0.2 is a standalone app. Run perc-mine-gui.exe or: python src/desktop_gui.py',
+      );
+      console.error(err.message || err);
+    }
+  });
 }
 
 if (isMainModule(import.meta.url, process.argv[1])) {
-  const srv = createGuiServer({ port: PORT });
-  srv.listen(() => {
-    const url = `http://127.0.0.1:${PORT}/`;
-    console.log(`perc-mine GUI ${url}`);
-    openBrowser(url);
-  });
+  if (process.env.PERC_MINE_GUI_HTTP === '1') {
+    const srv = createGuiServer({ port: PORT });
+    srv.listen(() => {
+      console.log(`perc-mine GUI http://127.0.0.1:${PORT}/`);
+    });
+  } else {
+    console.log('perc-mine GUI standalone (not browser)');
+    launchStandalone();
+  }
 }

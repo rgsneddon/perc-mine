@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
-if [[ -f "$HERE/../../src/gui.js" ]]; then
-  exec node "$HERE/../../src/gui.js" "$@"
+if [[ -f "$HERE/../../src/desktop_gui.py" ]]; then
+  exec python3 "$HERE/../../src/desktop_gui.py" "$@"
 fi
-if [[ -f "$HERE/src/gui.js" ]]; then
-  exec node "$HERE/src/gui.js" "$@"
+if [[ -f "$HERE/src/desktop_gui.py" ]]; then
+  exec python3 "$HERE/src/desktop_gui.py" "$@"
 fi
-echo "perc-mine-gui: could not find src/gui.js" >&2
+echo "perc-mine-gui: run python3 src/desktop_gui.py" >&2
 exit 1

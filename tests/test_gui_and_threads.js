@@ -90,7 +90,7 @@ test('absolute miner.js entry prints config (Connect spawn path)', () => {
 test('gui.js as process entry listens', async () => {
   const port = 18776;
   const child = spawn(process.execPath, [path.join(root, 'src', 'gui.js')], {
-    env: { ...process.env, PERC_MINE_GUI_PORT: String(port) },
+    env: { ...process.env, PERC_MINE_GUI_PORT: String(port), PERC_MINE_GUI_HTTP: '1' },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
   let buf = '';
@@ -118,6 +118,9 @@ test('GUI HTML has threads, miner config command, and Connect', () => {
   assert.match(html, /id="command"/);
   assert.match(html, />Connect</);
   assert.match(html, /Miner config command/);
+  assert.match(html, /location\.protocol === 'file:'/);
+  assert.match(html, /perc-mine-gui/);
+  assert.match(html, /\/api\/connect/);
 });
 
 test('GUI /api/connect starts the shipped miner command', async () => {
