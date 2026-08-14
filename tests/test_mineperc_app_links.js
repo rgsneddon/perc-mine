@@ -26,7 +26,7 @@ function anchors(html) {
 
 test('shipped mineperc page links wallet, CPU miner, and per-platform installers', () => {
   const html = readFileSync(SHIPPED, 'utf8');
-  assert.match(html, /BeamHash III/);
+  assert.equal(/beam/i.test(html), false, 'page must not mention Beam');
   assert.match(html, /1466/);
   assert.match(html, /3334/);
   assert.match(html, /id="mineperc-apps"/);
