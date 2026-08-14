@@ -56,6 +56,17 @@
     .copy-icon:hover { border-color:var(--cyan); }
     .copy-icon svg { display:block; width:1.05rem; height:1.05rem; margin:0 auto; fill:currentColor; }
     .cmd-list { display:flex; flex-direction:column; gap:10px; }
+    .apps { margin: 28px 0 8px; }
+    .apps h2 { margin: 0 0 8px; }
+    .dl-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:12px;
+      margin: 12px 0 18px;
+    }
+    .dl-card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:14px 16px; }
+    .dl-card ul { margin:8px 0 0; padding-left:1.1rem; }
+    .dl-card li { margin: 4px 0; }
   </style>
 </head>
 <body>
@@ -121,6 +132,39 @@
         </button>
       </div>
     </div>
+    <section class="apps" id="mineperc-apps" aria-label="Perccent apps and installers">
+      <h2>Apps and installers</h2>
+      <p class="hint">Standalone wallet, BeamHash III CPU miner, pool stratum, and the Evolve explorer. Each installer is the newest published asset for that platform.</p>
+      <div class="dl-grid">
+        <div class="dl-card">
+          <div class="label">Perccent standalone wallet</div>
+          <div class="value" style="font-size:1rem"><a href="https://github.com/rgsneddon/perccent-wallet">perccent-wallet</a></div>
+          <ul>
+            <li><a href="https://github.com/rgsneddon/perccent-wallet/releases/download/v1.1.6/perccent-wallet-v1.1.6-windows-x64-setup.exe">perccent-wallet Windows</a></li>
+            <li><a href="https://github.com/rgsneddon/perccent-wallet/releases/download/v1.1.6/perccent-wallet-v1.1.6-android-setup.apk">perccent-wallet Android</a></li>
+            <li><a href="https://github.com/rgsneddon/perccent-wallet/releases/download/v1.1.7/perccent-wallet-v1.1.7-macos-setup.zip">perccent-wallet macOS</a></li>
+            <li><a href="https://github.com/rgsneddon/perccent-wallet/releases/download/v1.1.7/perccent-wallet-v1.1.7-ios-setup.ipa">perccent-wallet iOS</a></li>
+          </ul>
+        </div>
+        <div class="dl-card">
+          <div class="label">Perc CPU miner (BeamHash III)</div>
+          <div class="value" style="font-size:1rem"><a href="https://github.com/rgsneddon/perc-mine">perc-mine</a></div>
+          <ul>
+            <li><a href="https://github.com/rgsneddon/perc-mine/releases/download/v1.0.0/perc-mine-1.0.0-windows.zip">perc-mine Windows</a></li>
+            <li><a href="https://github.com/rgsneddon/perc-mine/releases/download/v1.0.0/perc-mine-1.0.0-linux.tar.gz">perc-mine Linux</a></li>
+            <li><a href="https://github.com/rgsneddon/perc-mine/releases/download/v1.0.0/perc-mine-1.0.0-macos.tar.gz">perc-mine macOS</a></li>
+          </ul>
+        </div>
+        <div class="dl-card">
+          <div class="label">Related pool software</div>
+          <ul>
+            <li><a href="https://github.com/rgsneddon/perc-stratum-pool">perc-stratum-pool</a></li>
+            <li><a href="https://github.com/rgsneddon/basic">BASiC payments</a></li>
+            <li><a href="https://evolve.restoreprivacy.online/">Evolve explorer</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
     <p class="hint">Repos: <a href="https://github.com/rgsneddon/perc-mine">perc-mine</a> · <a href="https://github.com/rgsneddon/perc-stratum-pool">perc-stratum-pool</a> · <a href="https://github.com/rgsneddon/basic">basic</a> · JSON <a href="/api/connect">/api/connect</a> · health <a href="/health">/health</a> · explorer <a href="https://evolve.restoreprivacy.online/">evolve.restoreprivacy.online</a></p>
   </div>
   <script type="module">
