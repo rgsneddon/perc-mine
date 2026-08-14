@@ -33,8 +33,12 @@ Needs [Node.js 18+](https://nodejs.org/).
 git clone https://github.com/rgsneddon/perc-mine.git
 cd perc-mine
 npm install
-node src/miner.js --pool mineperc.restoreprivacy.online:1466 --user YOUR_PERC_NAME.worker1
+npm run gui
+# or CLI:
+node src/miner.js --pool mineperc.restoreprivacy.online:1466 --user YOUR_PERC_NAME.worker1 --threads 4
 ```
+
+The GUI lets you pick **threads**, edit the **miner config command**, and click **Connect** to start that miner.
 
 High-diff:
 
@@ -46,8 +50,8 @@ Plain TCP (no TLS): add `--notls`.
 
 Installer packages on [Releases](https://github.com/rgsneddon/perc-mine/releases) wrap the same script:
 
-- Windows: `pack/win/install.ps1` then `perc-mine.cmd`
-- Linux / macOS: `pack/unix/install.sh` then `perc-mine`
+- Windows: `pack/win/install.ps1` then `perc-mine-gui` or `perc-mine.cmd`
+- Linux / macOS: `pack/unix/install.sh` then `perc-mine-gui` or `perc-mine`
 
 GPU miners that already speak BeamHash III also work:
 

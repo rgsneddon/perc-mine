@@ -1,15 +1,17 @@
 {
   "name": "perc-mine",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Perccent (PERC) open-source pool + CPU miner. BeamHash III. Linked to perc-stratum-pool and BASiC, same split as beam-mine.",
   "type": "module",
   "bin": {
-    "perc-mine": "src/miner.js"
+    "perc-mine": "src/miner.js",
+    "perc-mine-gui": "src/gui.js"
   },
   "main": "init.js",
   "scripts": {
     "start": "node src/miner.js",
-    "mine": "node src/miner.js --pool mineperc.restoreprivacy.online:1466 --user PERC_USERNAME.WORKER",
+    "gui": "node src/gui.js",
+    "mine": "node src/miner.js --pool mineperc.restoreprivacy.online:1466 --user PERC_USERNAME.WORKER --threads 2",
     "pool": "node init.js",
     "test": "node --test tests/*.js"
   },

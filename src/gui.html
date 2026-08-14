@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>perc-mine 1.0.1</title>
+  <style>
+    :root { --bg:#0b0d14; --panel:#141824; --line:#252b3d; --text:#e8ecf4; --muted:#9aa3b8; --neon:#1affff; --ok:#00d4aa; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Segoe UI,system-ui,sans-serif; background:var(--bg); color:var(--text); }
+    .wrap { max-width:720px; margin:0 auto; padding:28px 18px 48px; }
+    h1 { margin:0 0 6px; font-size:1.5rem; }
+    .sub { color:var(--muted); margin:0 0 22px; }
+    label { display:block; color:var(--muted); font-size:.75rem; letter-spacing:.06em; text-transform:uppercase; margin:14px 0 6px; }
+    input, textarea { width:100%; background:#0b1a2c; color:var(--neon); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font:inherit; }
+    textarea { min-height:72px; font-family:ui-monospace,Consolas,monospace; font-size:.82rem; }
+    .row { display:flex; gap:12px; }
+    .row > * { flex:1; }
+    button {
+      margin-top:18px; width:100%; border:0; border-radius:10px; padding:12px 16px;
+      background:var(--neon); color:#042428; font-weight:800; letter-spacing:.06em; cursor:pointer;
+    }
+    button.stop { background:#ef4444; color:#fff; }
+    #log { margin-top:16px; background:#080b12; border:1px solid var(--line); border-radius:10px; padding:12px; min-height:160px; white-space:pre-wrap; font:0.8rem/1.45 ui-monospace,Consolas,monospace; color:var(--ok); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>perc-mine 1.0.1</h1>
+    <p class="sub">Perccent CPU miner · BeamHash III · Connect starts the miner with the command below</p>
+    <label for="pool">Pool</label>
+    <input id="pool" value="mineperc.restoreprivacy.online:1466"/>
+    <label for="user">Perc user</label>
+    <input id="user" value="PERC_USERNAME.WORKER"/>
+    <div class="row">
+      <div>
+        <label for="threads">Threads</label>
+        <input id="threads" type="number" min="1" max="64" value="2"/>
+      </div>
+    </div>
+    <label for="command">Miner config command</label>
+    <textarea id="command" spellcheck="false"></textarea>
+    <button id="go" type="button">Connect</button>
+    <pre id="log">Ready.</pre>
+  </div>
+  <script>
+    const pool = document.getElementById('pool');
+    const user = document.getElementById('user');
+    const threads = document.getElementById('threads');
+    const command = document.getElementById('command');
+    const go = document.getElementById('go');
+    const log = document.getElementById('log');
+    let connected = false;
+
+    async function refreshCommand() {
+      const q = new URLSearchParams({
+        pool: pool.value,
+        user: user.value,
+        threads: threads.value,
+      });
+      const r = await fetch('/api/command?' + q.toString());
+      const j = await r.json();
+      command.value = j.argvText;
+    }
+    pool.addEventListener('input', refreshCommand);
+    user.addEventListener('input', refreshCommand);
+    threads.addEventListener('input', refreshCommand);
+    refreshCommand();
+
+    function append(line) {
+      log.textContent += (log.textContent.endsWith('\n') ? '' : '\n') + line;
+      log.scrollTop = log.scrollHeight;
+    }
+
+    go.addEventListener('click', async () => {
+      if (connected) {
+        await fetch('/api/stop', { method: 'POST' });
+        go.textContent = 'Connect';
+        go.classList.remove('stop');
+        connected = false;
+        append('stopped');
+        return;
+      }
+      const body = {
+        pool: pool.value,
+        user: user.value,
+        threads: Number(threads.value),
+        command: command.value,
+      };
+      const r = await fetch('/api/connect', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const j = await r.json();
+      append(j.started ? 'started ' + j.cmd.argvText : ('error ' + (j.error || 'failed')));
+      if (j.started) {
+        connected = true;
+        go.textContent = 'Stop';
+        go.classList.add('stop');
+      }
+    });
+
+    setInterval(async () => {
+      const r = await fetch('/api/status');
+      const j = await r.json();
+      if (j.lines && j.lines.length) {
+        log.textContent = j.lines.join('\n');
+        log.scrollTop = log.scrollHeight;
+      }
+    }, 800);
+  </script>
+</body>
+</html>

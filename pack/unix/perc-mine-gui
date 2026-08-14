@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+HERE="$(cd "$(dirname "$0")" && pwd)"
+if [[ -f "$HERE/../../src/gui.js" ]]; then
+  exec node "$HERE/../../src/gui.js" "$@"
+fi
+if [[ -f "$HERE/src/gui.js" ]]; then
+  exec node "$HERE/src/gui.js" "$@"
+fi
+echo "perc-mine-gui: could not find src/gui.js" >&2
+exit 1

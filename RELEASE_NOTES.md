@@ -1,3 +1,7 @@
+# perc-mine v1.0.1
+
+Installable GUI: choose **threads**, see/edit the **miner config command**, click **Connect** to start the shipped miner. `--threads N` is honored as N CPU workers (nonce stride). Packages: `perc-mine-1.0.1-windows.zip`, `perc-mine-1.0.1-linux.tar.gz`, `perc-mine-1.0.1-macos.tar.gz`.
+
 # perc-mine v1.0.0
 
 First public release of the Perccent (PERC) CPU miner and open-source pool entry.
