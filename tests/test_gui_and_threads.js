@@ -4,11 +4,29 @@ import { spawn, spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { pathToFileURL } from 'node:url';
 import { honorThreads, parseMinerArgs } from '../src/miner.js';
 import { buildMinerCommand, startMinerFromGui } from '../src/gui_launch.js';
 import { createGuiServer } from '../src/gui.js';
+import { isMainModule } from '../src/is_main.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+test('isMainModule accepts Windows backslash argv that file://${argv} misses', () => {
+  const winArgv = 'C:\\Users\\miner\\perc-mine\\src\\miner.js';
+  const winHref = pathToFileURL(winArgv).href;
+  assert.equal(isMainModule(winHref, winArgv), true);
+  assert.notEqual(winHref, `file://${winArgv}`);
+  assert.equal(isMainModule(winHref, 'C:\\Users\\miner\\perc-mine\\src\\gui.js'), false);
+  const posix = '/Users/miner/perc-mine/src/gui.js';
+  assert.equal(isMainModule(pathToFileURL(posix).href, posix), true);
+  const minerSrc = readFileSync(path.join(root, 'src/miner.js'), 'utf8');
+  const guiSrc = readFileSync(path.join(root, 'src/gui.js'), 'utf8');
+  assert.match(minerSrc, /isMainModule/);
+  assert.match(guiSrc, /isMainModule/);
+  assert.doesNotMatch(minerSrc, /file:\$\{process\.argv\[1\]\}/);
+  assert.doesNotMatch(guiSrc, /file:\$\{process\.argv\[1\]\}/);
+});
 
 test('honorThreads and --threads are applied by the shipped miner', () => {
   const plan = honorThreads(4);
@@ -58,6 +76,40 @@ test('GUI builder command is what Connect launches and what miner honors', () =>
   assert.equal(seen.args[seen.args.indexOf('--threads') + 1], '7');
   assert.equal(seen.cmd || seen.args.includes('--notls'), true);
   assert.equal(fake.cmd.threads, 7);
+});
+
+test('absolute miner.js entry prints config (Connect spawn path)', () => {
+  const minerPath = path.join(root, 'src', 'miner.js');
+  const printed = spawnSync(process.execPath, [minerPath, '--print-config', '--threads', '8'], {
+    encoding: 'utf8',
+  });
+  assert.equal(printed.status, 0, printed.stderr);
+  assert.equal(JSON.parse(printed.stdout).threads, 8);
+});
+
+test('gui.js as process entry listens', async () => {
+  const port = 18776;
+  const child = spawn(process.execPath, [path.join(root, 'src', 'gui.js')], {
+    env: { ...process.env, PERC_MINE_GUI_PORT: String(port) },
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  let buf = '';
+  await new Promise((resolve, reject) => {
+    const t = setTimeout(() => reject(new Error(`gui no listen: ${buf}`)), 5000);
+    const on = (c) => {
+      buf += c.toString('utf8');
+      if (/perc-mine GUI/.test(buf)) {
+        clearTimeout(t);
+        resolve();
+      }
+    };
+    child.stdout.on('data', on);
+    child.stderr.on('data', on);
+    child.on('error', reject);
+  });
+  const html = await fetch(`http://127.0.0.1:${port}/`).then((r) => r.text());
+  assert.match(html, />Connect</);
+  child.kill('SIGTERM');
 });
 
 test('GUI HTML has threads, miner config command, and Connect', () => {

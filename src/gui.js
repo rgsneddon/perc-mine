@@ -8,6 +8,7 @@ import path from 'node:path';
 import { exec } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { buildMinerCommand, defaultGuiSettings, startMinerFromGui } from './gui_launch.js';
+import { isMainModule } from './is_main.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const PAGE = path.join(here, 'gui.html');
@@ -115,7 +116,7 @@ function openBrowser(url) {
   else exec(`xdg-open "${url}"`);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isMainModule(import.meta.url, process.argv[1])) {
   const srv = createGuiServer({ port: PORT });
   srv.listen(() => {
     const url = `http://127.0.0.1:${PORT}/`;

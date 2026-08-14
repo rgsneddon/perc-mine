@@ -7,6 +7,7 @@ import tls from 'tls';
 import net from 'net';
 import { solveOnce, hex8, extraFromInt } from './solve.js';
 import { defaultPreWork } from './beamhash_iii.js';
+import { isMainModule } from './is_main.js';
 
 export const VERSION = '1.0.1';
 
@@ -178,7 +179,7 @@ export function main(argv = process.argv) {
   return { sock, cfg };
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isMainModule(import.meta.url, process.argv[1])) {
   const code = main(process.argv);
   if (typeof code === 'number') process.exit(code);
 }
